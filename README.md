@@ -6,4 +6,6 @@ A table tennis–themed arcade sports video game featuring simple two-dimensiona
  * Can compete against another player controlling a second paddle on the opposing side <br>
  * The goal is for each player to get as many points until the players gets bored <br>
  * Points are earned when one fails to return the ball to the other
+ * A music background plays as a continuous loop
+ * A bouncing effect sound when the ball touches the paddle and screen surface
  
