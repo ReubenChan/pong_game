@@ -1,25 +1,24 @@
 import turtle
 import winsound
 import pygame
+import sys
+import random
 from pygame import mixer
 
-
-window = turtle.Screen()
-window.title("Pong by @ReubenChan")
-window.bgcolor("black")
-window.setup(width=800, height=600)
-window.tracer(0)
+wn = turtle.Screen()
+wn.title("Pong")
+wn.bgcolor("black")
+wn.setup(width=800, height=600)
+wn.tracer(0)
 
 # Music background
 mixer.init()
 mixer.music.load("pythonProject1\pong_game\pong\pongmusic.wav")
 mixer.music.play(-1)
 
-
 # Score
 score_a = 0
 score_b = 0
-
 
 # Paddle A
 paddle_a = turtle.Turtle()
@@ -46,12 +45,13 @@ ball.shape("square")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
-ball.dx = 0.15
-ball.dy = -0.15
+ball.dx = 0.17
+ball.dy = -0.17
 
 # Pen
 pen = turtle.Turtle()
-pen.speed()
+pen.speed(0)
+pen.shape("square")
 pen.color("white")
 pen.penup()
 pen.hideturtle()
@@ -86,51 +86,61 @@ def paddle_b_down():
     paddle_b.sety(y)
 
 
-# Keyboard binding
-window.listen()
-window.onkeypress(paddle_a_up, "w")
-window.onkeypress(paddle_a_down, "s")
-window.onkeypress(paddle_b_up, "Up")
-window.onkeypress(paddle_b_down, "Down")
+# Keyboard bindings
+wn.listen()
+wn.onkeypress(paddle_a_up, "w")
+wn.onkeypress(paddle_a_down, "s")
+wn.onkeypress(paddle_b_up, "Up")
+wn.onkeypress(paddle_b_down, "Down")
 
 # Main game loop
 while True:
-    window.update()
+    wn.update()
 
     # Move the ball
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
-    # border checking
+    # Border checking
+
+    # Top and bottom
     if ball.ycor() > 290:
         ball.sety(290)
         ball.dy *= -1
+        winsound.PlaySound(
+            r"pythonProject1\pong_game\pong\bounce.wav", winsound.SND_ASYNC)
 
-    if ball.ycor() < -290:
+    elif ball.ycor() < -290:
         ball.sety(-290)
         ball.dy *= -1
+        winsound.PlaySound(
+            r"pythonProject1\pong_game\pong\bounce.wav", winsound.SND_ASYNC)
 
-    if ball.xcor() > 390:
-        ball.goto(0, 0)
-        ball.dx *= -1
+    # Left and right
+    if ball.xcor() > 350:
         score_a += 1
         pen.clear()
-        pen.write("Player A: {}  Player B: {}".format(
-            score_a, score_b), align="center")
-
-    if ball.xcor() < -390:
+        pen.write("Player A: {}  Player B: {}".format(score_a, score_b),
+                  align="center", font=("Courier", 24, "normal"))
         ball.goto(0, 0)
         ball.dx *= -1
+
+    elif ball.xcor() < -350:
         score_b += 1
         pen.clear()
-        pen.write("Player A: {}  Player B: {}".format(
-            score_a, score_b), align="center")
-
-    # paddle and vall collisions
-    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 40):
-        ball.setx(340)
+        pen.write("Player A: {}  Player B: {}".format(score_a, score_b),
+                  align="center", font=("Courier", 24, "normal"))
+        ball.goto(0, 0)
         ball.dx *= -1
 
-    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 40):
-        ball.setx(-340)
+    # Paddle and ball collisions
+    if ball.xcor() < -340 and ball.ycor() < paddle_a.ycor() + 50 and ball.ycor() > paddle_a.ycor() - 50:
         ball.dx *= -1
+        winsound.PlaySound(
+            r"pythonProject1\pong_game\pong\bounce.wav", winsound.SND_ASYNC)
+
+    elif ball.xcor() > 340 and ball.ycor() < paddle_b.ycor() + 50 and ball.ycor() > paddle_b.ycor() - 50:
+        ball.dx *= -1
+        winsound.PlaySound(
+            r"pythonProject1\pong_game\pong\bounce.wav", winsound.SND_ASYNC)
+
